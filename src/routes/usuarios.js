@@ -40,8 +40,34 @@ router.post('/registrar/usuarios',(req,res) => {
 });
 
 //ACTUALIZAR
-router.post('/actualizar/usuarios',(req,res) => {
+router.put('/actualizar/usuarios/:id',(req,res) => {
+    const {nombre1,nombre2,apellido1,apellido2,n_identificacion,tipo_usuario} = req.body;
+    const {id} = req.params;
+    const query = `
+    update usuario SET nombre1 = ?, nombre2 = ?,
+        apellido1 = ?,apellido2 = ?,
+        n_identificacion = ?,tipo_usuario = ? where id = ?
+    `;
+    mysqlConnection.query(query, [nombre1,nombre2,apellido1,apellido2,n_identificacion,tipo_usuario,id], (err,rows,fields) =>{
+        if (!err) {
+            res.json({Status: 'Usuario Actualizado'});
+        } else {
+            console.log(err);            
+        }
+   })
+});
 
+
+//ELIMINAR
+router.delete('/eliminar/usuarios/:id',(req,res) => {
+    const {id} = req.params;
+    mysqlConnection.query('delete from usuario where id = ?',[id], (err,rows,fields) => {
+        if ((!err)) {
+            res.json({Status: 'usuario eliminado'});
+        } else {
+            console.log(err);
+        }
+    })
 });
 
 
